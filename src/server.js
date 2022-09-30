@@ -1,7 +1,8 @@
-import express, { application } from "express";
+import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
 import connection from "./database/db.js";
+import routes from "./routers/routes.js";
 
 dotenv.config();
 
@@ -9,20 +10,10 @@ const server = express();
 server.use(express.json());
 server.use(cors());
 
-server.get("/", async (req, res) => {
-  try {
-    const query = await connection.query('SELECT * FROM teste');
+server.use(routes);
 
+const PORT = process.env.PORT || 4000;
 
-    return res.status(200).send(query.rows[0]);
-  } catch (error) {
-    return res.status(500).send({
-      error: error.message,
-    });
-  }
-});
-
-
-server.listen(process.env.PORT, () => {
-  console.log(`Listening on port ${process.env.PORT}`);
+server.listen(PORT, () => {
+  console.log(`Listening on port ${PORT}`);
 });
