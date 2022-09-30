@@ -12,7 +12,7 @@ export async function getRentals(req, res) {
     let SELECT = `
     SELECT rentals.*, 
     json_build_object('id', customers.id, 'name', customers.name) AS customer,
-    json_bu\ild_object('id', games.id, 'name', games.name, 'categoryId', games."categoryId", 'categoryName', categories.name) AS game 
+    json_build_object('id', games.id, 'name', games.name, 'categoryId', games."categoryId", 'categoryName', categories.name) AS game 
     FROM rentals 
     JOIN customers ON customers.id = rentals."customerId" 
     JOIN games ON games.id = rentals."gameId" 
