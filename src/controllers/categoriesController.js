@@ -6,7 +6,7 @@ export async function getCategories(req, res) {
 
     return res.status(200).send(categories.rows);
   } catch (error) {
-    return res.status(500).send({ erro: error.message });
+    return res.status(500).send({ error: error.message });
   }
 }
 

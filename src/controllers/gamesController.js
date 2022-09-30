@@ -18,7 +18,7 @@ export async function getGames(req, res) {
 
     return res.status(200).send(games.rows);
   } catch (error) {
-    return res.status(500).send({ erro: error.message });
+    return res.status(500).send({ error: error.message });
   }
 }
 
@@ -52,6 +52,6 @@ export async function createGame(req, res) {
     );
     return res.sendStatus(201);
   } catch (error) {
-    return res.status(500).send({ erro: error.message });
+    return res.status(500).send({ error: error.message });
   }
 }
