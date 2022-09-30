@@ -25,7 +25,7 @@ export async function getCustomer(req, res) {
 
   try {
     const customer = await connection.query(
-      "SELECT * FROM customers WHERE id = $1",
+      "SELECT * FROM customers WHERE id = $1;",
       [id]
     );
 
@@ -51,7 +51,7 @@ export async function createCustomer(req, res) {
     }
 
     await connection.query(
-      "INSERT INTO customers (name, phone, cpf, birthday) VALUES ($1, $2, $3, $4)",
+      "INSERT INTO customers (name, phone, cpf, birthday) VALUES ($1, $2, $3, $4);",
       [name, phone, cpf, birthday]
     );
 
@@ -62,7 +62,26 @@ export async function createCustomer(req, res) {
 }
 
 export async function updateCustomer(req, res) {
+  const { name, phone, cpf, birthday } = res.locals.customer;
+  const { id } = req.params;
   try {
+    const checkExistingCustomer = await connection.query(
+      "SELECT * FROM customers WHERE id <> $1 AND cpf = $2;",
+      [id, cpf]
+    );
+
+    if (checkExistingCustomer.rowCount > 0) {
+      return res
+        .status(409)
+        .send({ message: "CPF already being used by other customer." });
+    }
+
+    await connection.query(
+      "UPDATE customers SET name = $1, phone = $2, cpf = $3, birthday = $4 WHERE id = $5;",
+      [name, phone, cpf, birthday, id]
+    );
+
+    return res.sendStatus(200);
   } catch (error) {
     return res.status(500).send({ error: error.message });
   }
