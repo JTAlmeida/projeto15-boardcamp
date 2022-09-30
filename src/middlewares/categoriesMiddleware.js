@@ -1,6 +1,6 @@
 import joi from 'joi';
 
-export default function validateCategory(req, res, next) {
+export default function categoryValidation(req, res, next) {
   const { name } = req.body;
 
   const validation = joi
