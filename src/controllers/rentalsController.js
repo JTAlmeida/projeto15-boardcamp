@@ -154,7 +154,20 @@ export async function endRental(req, res) {
 }
 
 export async function deleteRental(req, res) {
+  const { id } = req.params;
+
   try {
+    const checkRental = await connection.query(
+      `SELECT * FROM rentals WHERE id = $1;`,
+      [id]
+    );
+
+    if (checkRental.rowCount===0){
+        return res.status(404).send({message: "Rental not found."});
+    }
+
+    await connection.query(`DELETE FROM rentals WHERE id = $1;`,[id]);
+    return res.sendStatus(200);
   } catch (error) {
     return res.status(500).send({ error: error.message });
   }
