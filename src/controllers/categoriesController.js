@@ -26,7 +26,7 @@ export async function createCategory(req, res) {
     }
 
     await connection.query("INSERT INTO categories (name) VALUES ($1)", [name]);
-    res.sendStatus(201);
+    return res.sendStatus(201);
   } catch (error) {
     return res.status(500).send({ error: error.message });
   }

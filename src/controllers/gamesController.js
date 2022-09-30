@@ -1,12 +1,22 @@
 import connection from "../database/db.js";
 
 export async function getGames(req, res) {
+  const { name } = req.query;
+
   try {
-    const games = await connection.query(
+    let games;
+    if (name) {
+      games = await connection.query(
+        `SELECT games.*, categories.name AS "categoryName" FROM games JOIN categories ON categories.id = games."categoryId" WHERE games.name ILIKE '${name}%';`
+      );
+      return res.status(200).send(games.rows);
+    }
+
+    games = await connection.query(
       'SELECT games.*, categories.name AS "categoryName" FROM games JOIN categories ON categories.id = games."categoryId";'
     );
 
-    res.status(200).send(games.rows);
+    return res.status(200).send(games.rows);
   } catch (error) {
     return res.status(500).send({ erro: error.message });
   }
@@ -17,7 +27,7 @@ export async function createGame(req, res) {
 
   try {
     const checkCategory = await connection.query(
-      'SELECT * FROM categories WHERE id = $1;',
+      "SELECT * FROM categories WHERE id = $1;",
       [categoryId]
     );
 
@@ -40,7 +50,7 @@ export async function createGame(req, res) {
       'INSERT INTO games (name, image, "stockTotal", "categoryId", "pricePerDay") VALUES ($1, $2, $3, $4, $5);',
       [name, image, stockTotal, categoryId, pricePerDay]
     );
-    res.sendStatus(201);
+    return res.sendStatus(201);
   } catch (error) {
     return res.status(500).send({ erro: error.message });
   }
