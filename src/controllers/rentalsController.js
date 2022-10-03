@@ -139,7 +139,8 @@ export async function endRental(req, res) {
     let delayFee = 0;
 
     if (daysSinceRental > rental.daysRented) {
-      delayFee = (daysSinceRental - rental.daysRented) * rental.originalPrice;
+      delayFee = ((daysSinceRental - rental.daysRented) * rental.originalPrice).toFixed(0);
+ 
     }
 
     await connection.query(
